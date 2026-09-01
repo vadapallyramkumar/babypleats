@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://babypleats.com/schemas/product.json",
+  "title": "Product",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "slug",
+    "name",
+    "categoryId",
+    "description",
+    "care",
+    "images",
+    "variants",
+    "isNew",
+    "featured",
+    "isActive",
+    "tags",
+    "createdAt",
+    "updatedAt"
+  ],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "slug": { "type": "string", "minLength": 1, "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "name": { "type": "string", "minLength": 1 },
+    "categoryId": { "type": "string", "minLength": 1 },
+    "subcategory": { "type": "string" },
+    "description": { "type": "string", "minLength": 1 },
+    "fabric": { "type": "string" },
+    "care": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "images": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "colorGalleries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["color", "images"],
+        "properties": {
+          "color": { "type": "string", "minLength": 1 },
+          "images": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string", "minLength": 1 }
+          }
+        }
+      }
+    },
+    "variants": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/ProductVariant" }
+    },
+    "priceFrom": {
+      "description": "Derived on read: min selling among active variants",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["selling", "currency"],
+      "properties": {
+        "selling": { "type": "number", "exclusiveMinimum": 0 },
+        "original": { "type": "number", "exclusiveMinimum": 0 },
+        "currency": { "type": "string", "const": "INR" }
+      }
+    },
+    "sizes": {
+      "description": "Derived on read: unique sizes from active variants",
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "colors": {
+      "description": "Derived on read: unique colors from active variants",
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "stock": {
+      "description": "Derived on read: sum of active variant stock",
+      "type": "integer",
+      "minimum": 0
+    },
+    "isNew": { "type": "boolean" },
+    "featured": { "type": "boolean" },
+    "isActive": { "type": "boolean" },
+    "rating": { "type": "number", "minimum": 0, "maximum": 5 },
+    "reviewsCount": { "type": "integer", "minimum": 0 },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "updatedAt": { "type": "string", "format": "date-time" }
+  },
+  "$defs": {
+    "ProductVariant": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "sku", "size", "color", "price", "stock", "isActive"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "sku": { "type": "string", "minLength": 1 },
+        "size": { "type": "string", "minLength": 1 },
+        "color": { "type": "string", "minLength": 1 },
+        "price": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["selling", "currency"],
+          "properties": {
+            "selling": { "type": "number", "exclusiveMinimum": 0 },
+            "original": { "type": "number", "exclusiveMinimum": 0 },
+            "currency": { "type": "string", "const": "INR" }
+          }
+        },
+        "stock": { "type": "integer", "minimum": 0 },
+        "isActive": { "type": "boolean" },
+        "image": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

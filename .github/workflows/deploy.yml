@@ -1,0 +1,60 @@
+name: Deploy Next.js to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Do NOT set static_site_generator: next — it only supports
+      # next.config.js/cjs/mjs and would create a conflicting next.config.js
+      # that drops NEXT_PUBLIC_BASE_PATH (breaking images/videos).
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # Pin npm: newer versions reject lockfiles that omit optional wasm32
+      # transitive deps (@emnapi/*) which Windows npm never writes.
+      - run: npm install -g npm@11.6.2
+
+      - run: npm ci
+
+      - run: npm run build
+        env:
+          NEXT_PUBLIC_BASE_PATH: /babypleates
+          NEXT_PUBLIC_API_BASE_URL: https://babypleats-api.onrender.com/v1
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./out
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    needs: build
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+:root {
+  --brand: #a02c68;
+  --brand-dark: #8b235a;
+  --cream: #fff8f5;
+  --blush: #f5e6ec;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--cream);
+  color: #1f2937;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--brand) 25%, white);
+}

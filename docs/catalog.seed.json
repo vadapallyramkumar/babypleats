@@ -1,0 +1,377 @@
+{
+  "categories": [
+    {
+      "id": "budget-friendly",
+      "slug": "budget-friendly",
+      "name": "Budget Friendly",
+      "image": "/hero1.png",
+      "description": "Festive looks at a gentler price — made for everyday celebrations.",
+      "sortOrder": 1,
+      "isActive": true
+    },
+    {
+      "id": "aari-work-pavada-set",
+      "slug": "aari-work-pavada-set",
+      "name": "Aari Work Pavada Set",
+      "image": "/aariwork.jpg",
+      "description": "Hand-embellished aari pavada sets with intricate craft.",
+      "sortOrder": 2,
+      "isActive": true
+    },
+    {
+      "id": "aari-work-frocks",
+      "slug": "aari-work-frocks",
+      "name": "Aari Work Frocks",
+      "image": "/pattugown.webp",
+      "description": "Aari-work frocks with fine detailing for little occasions.",
+      "sortOrder": 3,
+      "isActive": true
+    },
+    {
+      "id": "aari-work-coat-set",
+      "slug": "aari-work-coat-set",
+      "name": "Aari Work Coat Set",
+      "image": "/green_pattu.png",
+      "description": "Layered aari coat sets for festive dressing.",
+      "sortOrder": 4,
+      "isActive": true
+    },
+    {
+      "id": "ethnic-silk-frocks",
+      "slug": "ethnic-silk-frocks",
+      "name": "Ethnic Silk Frocks",
+      "image": "/frocks_new.webp",
+      "description": "Soft silk frocks with a festive ethnic touch.",
+      "sortOrder": 5,
+      "isActive": true
+    },
+    {
+      "id": "kota-collection",
+      "slug": "kota-collection",
+      "name": "Kota Collection",
+      "image": "/halfsaree.webp",
+      "description": "Light kota weaves — airy, elegant, and photo-ready.",
+      "sortOrder": 6,
+      "isActive": true
+    },
+    {
+      "id": "paithani-collection",
+      "slug": "paithani-collection",
+      "name": "Paithani Collection",
+      "image": "/pattu.png",
+      "description": "Rich paithani-inspired silks for weddings and poojas.",
+      "sortOrder": 7,
+      "isActive": true
+    },
+    {
+      "id": "kalyani-cotton-frocks",
+      "slug": "kalyani-cotton-frocks",
+      "name": "Kalyani Cotton Frocks",
+      "image": "/frocks.webp",
+      "description": "Breathable Kalyani cotton frocks for everyday tradition.",
+      "sortOrder": 8,
+      "isActive": true
+    },
+    {
+      "id": "pattu-pavada-sets",
+      "slug": "pattu-pavada-sets",
+      "name": "Pattu Pavada Sets",
+      "image": "/pattupavvadi.jpg",
+      "description": "Classic silk pavada sets for festivals and family celebrations.",
+      "sortOrder": 9,
+      "isActive": true
+    },
+    {
+      "id": "crop-top-and-skirt-set",
+      "slug": "crop-top-and-skirt-set",
+      "name": "Crop Top and Skirt Set",
+      "image": "/topandskit.jpg",
+      "description": "Comfortable ethnic separates for easy festive dressing.",
+      "sortOrder": 10,
+      "isActive": true
+    },
+    {
+      "id": "ready-to-dispatch",
+      "slug": "ready-to-dispatch",
+      "name": "Ready to Dispatch",
+      "image": "/hero.png",
+      "description": "In-stock favourites that can ship without the wait.",
+      "sortOrder": 11,
+      "isActive": true
+    },
+    {
+      "id": "best-sellers",
+      "slug": "best-sellers",
+      "name": "Best Sellers",
+      "image": "/sunset.png",
+      "description": "Our most-loved outfits — the ones families come back for.",
+      "sortOrder": 12,
+      "isActive": true
+    }
+  ],
+  "products": [
+    {
+      "id": "BP001",
+      "slug": "traditional-pink-pattu-pavadai",
+      "name": "Traditional Pink Pattu Pavadai",
+      "categoryId": "pattu-pavada-sets",
+      "subcategory": "Traditional",
+      "description": "Premium silk pattu pavadai with traditional zari border.",
+      "fabric": "Semi Kanjeevaram silk",
+      "care": ["Dry clean only", "Do not bleach", "Steam iron"],
+      "images": [
+        "/images/products/BP001/1.jpg",
+        "/images/products/BP001/2.jpg",
+        "/images/products/BP001/3.jpg"
+      ],
+      "colorGalleries": [
+        {
+          "color": "Pink",
+          "images": [
+            "/images/products/BP001/1.jpg",
+            "/images/products/BP001/2.jpg"
+          ]
+        },
+        {
+          "color": "Gold",
+          "images": ["/images/products/BP001/3.jpg"]
+        }
+      ],
+      "variants": [
+        {
+          "id": "BP001-PNK-1Y",
+          "sku": "BP001-PNK-1Y",
+          "size": "1Y",
+          "color": "Pink",
+          "price": { "selling": 2499, "original": 2999, "currency": "INR" },
+          "stock": 3,
+          "isActive": true
+        },
+        {
+          "id": "BP001-PNK-2Y",
+          "sku": "BP001-PNK-2Y",
+          "size": "2Y",
+          "color": "Pink",
+          "price": { "selling": 2699, "original": 3199, "currency": "INR" },
+          "stock": 2,
+          "isActive": true
+        },
+        {
+          "id": "BP001-PNK-3Y",
+          "sku": "BP001-PNK-3Y",
+          "size": "3Y",
+          "color": "Pink",
+          "price": { "selling": 2899, "original": 3399, "currency": "INR" },
+          "stock": 2,
+          "isActive": true
+        },
+        {
+          "id": "BP001-PNK-4Y",
+          "sku": "BP001-PNK-4Y",
+          "size": "4Y",
+          "color": "Pink",
+          "price": { "selling": 3099, "original": 3599, "currency": "INR" },
+          "stock": 1,
+          "isActive": true
+        },
+        {
+          "id": "BP001-GLD-2Y",
+          "sku": "BP001-GLD-2Y",
+          "size": "2Y",
+          "color": "Gold",
+          "price": { "selling": 2999, "original": 3499, "currency": "INR" },
+          "stock": 2,
+          "isActive": true
+        },
+        {
+          "id": "BP001-GLD-3Y",
+          "sku": "BP001-GLD-3Y",
+          "size": "3Y",
+          "color": "Gold",
+          "price": { "selling": 3199, "original": 3699, "currency": "INR" },
+          "stock": 1,
+          "isActive": true
+        },
+        {
+          "id": "BP001-GLD-4Y",
+          "sku": "BP001-GLD-4Y",
+          "size": "4Y",
+          "color": "Gold",
+          "price": { "selling": 3399, "original": 3899, "currency": "INR" },
+          "stock": 0,
+          "isActive": true
+        }
+      ],
+      "isNew": true,
+      "featured": true,
+      "isActive": true,
+      "rating": 4.9,
+      "reviewsCount": 18,
+      "tags": ["festival", "wedding", "traditional"],
+      "createdAt": "2026-08-01T00:00:00.000Z",
+      "updatedAt": "2026-08-01T00:00:00.000Z"
+    },
+    {
+      "id": "BP002",
+      "slug": "royal-blue-pattu-gown",
+      "name": "Royal Blue Pattu Gown",
+      "categoryId": "ethnic-silk-frocks",
+      "subcategory": "Party Wear",
+      "description": "Elegant pattu gown for birthdays and special occasions.",
+      "fabric": "Tissue silk",
+      "care": ["Dry clean recommended"],
+      "images": ["/images/products/BP002/1.jpg"],
+      "variants": [
+        {
+          "id": "BP002-RBL-3Y",
+          "sku": "BP002-RBL-3Y",
+          "size": "3Y",
+          "color": "Royal Blue",
+          "price": { "selling": 3299, "original": 3999, "currency": "INR" },
+          "stock": 3,
+          "isActive": true
+        },
+        {
+          "id": "BP002-RBL-4Y",
+          "sku": "BP002-RBL-4Y",
+          "size": "4Y",
+          "color": "Royal Blue",
+          "price": { "selling": 3499, "original": 4199, "currency": "INR" },
+          "stock": 3,
+          "isActive": true
+        },
+        {
+          "id": "BP002-RBL-5Y",
+          "sku": "BP002-RBL-5Y",
+          "size": "5Y",
+          "color": "Royal Blue",
+          "price": { "selling": 3699, "original": 4399, "currency": "INR" },
+          "stock": 2,
+          "isActive": true
+        },
+        {
+          "id": "BP002-RBL-6Y",
+          "sku": "BP002-RBL-6Y",
+          "size": "6Y",
+          "color": "Royal Blue",
+          "price": { "selling": 3899, "original": 4599, "currency": "INR" },
+          "stock": 2,
+          "isActive": true
+        },
+        {
+          "id": "BP002-NVY-3Y",
+          "sku": "BP002-NVY-3Y",
+          "size": "3Y",
+          "color": "Navy",
+          "price": { "selling": 3399, "original": 4099, "currency": "INR" },
+          "stock": 2,
+          "isActive": true
+        },
+        {
+          "id": "BP002-NVY-4Y",
+          "sku": "BP002-NVY-4Y",
+          "size": "4Y",
+          "color": "Navy",
+          "price": { "selling": 3599, "original": 4299, "currency": "INR" },
+          "stock": 2,
+          "isActive": true
+        },
+        {
+          "id": "BP002-NVY-5Y",
+          "sku": "BP002-NVY-5Y",
+          "size": "5Y",
+          "color": "Navy",
+          "price": { "selling": 3799, "original": 4499, "currency": "INR" },
+          "stock": 1,
+          "isActive": true
+        },
+        {
+          "id": "BP002-NVY-6Y",
+          "sku": "BP002-NVY-6Y",
+          "size": "6Y",
+          "color": "Navy",
+          "price": { "selling": 3999, "original": 4699, "currency": "INR" },
+          "stock": 1,
+          "isActive": true
+        }
+      ],
+      "isNew": false,
+      "featured": true,
+      "isActive": true,
+      "rating": 4.8,
+      "reviewsCount": 10,
+      "tags": ["birthday", "party"],
+      "createdAt": "2026-08-01T00:00:00.000Z",
+      "updatedAt": "2026-08-01T00:00:00.000Z"
+    },
+    {
+      "id": "BP003",
+      "slug": "maroon-half-saree",
+      "name": "Maroon Half Saree",
+      "categoryId": "paithani-collection",
+      "subcategory": "Festival",
+      "description": "Traditional half saree with rich zari work.",
+      "fabric": "Semi silk",
+      "care": ["Dry clean only"],
+      "images": [
+        "/images/products/BP003/1.jpg",
+        "/images/products/BP003/2.jpg"
+      ],
+      "variants": [
+        {
+          "id": "BP003-MRN-8Y",
+          "sku": "BP003-MRN-8Y",
+          "size": "8Y",
+          "color": "Maroon",
+          "price": { "selling": 4199, "original": 4599, "currency": "INR" },
+          "stock": 2,
+          "isActive": true
+        },
+        {
+          "id": "BP003-MRN-10Y",
+          "sku": "BP003-MRN-10Y",
+          "size": "10Y",
+          "color": "Maroon",
+          "price": { "selling": 4399, "original": 4799, "currency": "INR" },
+          "stock": 2,
+          "isActive": true
+        },
+        {
+          "id": "BP003-MRN-12Y",
+          "sku": "BP003-MRN-12Y",
+          "size": "12Y",
+          "color": "Maroon",
+          "price": { "selling": 4599, "original": 4999, "currency": "INR" },
+          "stock": 1,
+          "isActive": true
+        },
+        {
+          "id": "BP003-GLD-10Y",
+          "sku": "BP003-GLD-10Y",
+          "size": "10Y",
+          "color": "Gold",
+          "price": { "selling": 4699, "original": 5099, "currency": "INR" },
+          "stock": 1,
+          "isActive": true
+        },
+        {
+          "id": "BP003-GLD-12Y",
+          "sku": "BP003-GLD-12Y",
+          "size": "12Y",
+          "color": "Gold",
+          "price": { "selling": 4899, "original": 5299, "currency": "INR" },
+          "stock": 1,
+          "isActive": true
+        }
+      ],
+      "isNew": true,
+      "featured": false,
+      "isActive": true,
+      "rating": 5,
+      "reviewsCount": 7,
+      "tags": ["traditional", "festival"],
+      "createdAt": "2026-08-01T00:00:00.000Z",
+      "updatedAt": "2026-08-01T00:00:00.000Z"
+    }
+  ]
+}
