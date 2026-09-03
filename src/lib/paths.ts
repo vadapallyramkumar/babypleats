@@ -1,5 +1,5 @@
 /** GitHub Pages project site path (must match next.config `basePath`). */
-const PROD_BASE_PATH = "/babypleates";
+const PROD_BASE_PATH = "/babypleats";
 
 /** Prefix public assets for GitHub Pages (`basePath`). */
 export function assetPath(path: string): string {
