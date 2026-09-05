@@ -6,3 +6,16 @@ export function getApiBase(): string {
 }
 
 export const API_BASE = getApiBase();
+
+export async function apiGet<T>(path: string): Promise<T | null> {
+  try {
+    const isServer = typeof window === "undefined";
+    const res = await fetch(`${API_BASE}${path}`, {
+      ...(isServer ? { next: { revalidate: 60 } } : { cache: "no-store" }),
+    });
+    if (!res.ok) return null;
+    return (await res.json()) as T;
+  } catch {
+    return null;
+  }
+}

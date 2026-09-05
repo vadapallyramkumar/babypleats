@@ -1,22 +1,9 @@
 import fallback from "@/data/catalog.fallback.json";
-import { API_BASE } from "./base";
+import { apiGet } from "./base";
 import { mapCategory, mapProduct } from "./map";
 import type { ApiCategory, ApiProduct, ApiVariant, Category, Product } from "./types";
 
 type ListMeta = { page: number; limit: number; total: number };
-
-async function apiGet<T>(path: string): Promise<T | null> {
-  try {
-    const isServer = typeof window === "undefined";
-    const res = await fetch(`${API_BASE}${path}`, {
-      ...(isServer ? { next: { revalidate: 60 } } : { cache: "no-store" }),
-    });
-    if (!res.ok) return null;
-    return (await res.json()) as T;
-  } catch {
-    return null;
-  }
-}
 
 function enrichSeedProduct(raw: Record<string, unknown>): ApiProduct {
   const variants = (raw.variants as ApiVariant[]) ?? [];

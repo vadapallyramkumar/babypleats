@@ -95,3 +95,55 @@ export type Product = {
   colorImages: Record<string, string[]>;
   variants: ProductVariant[];
 };
+
+/** Home CMS — matches babypleats-api `/v1/home/*` mappers */
+export type ApiHeroImage = {
+  id: string;
+  url: string;
+  mobileUrl: string | null;
+  alt: string;
+  order: number;
+  active: boolean;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type ApiPromotionalMessage = {
+  id: string;
+  message: string;
+  order: number;
+  active: boolean;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type SocialMediaType = "image" | "video";
+
+export type ApiSocialLink = {
+  id: string;
+  url: string;
+  type: SocialMediaType;
+  order: number;
+  active: boolean;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type HeroImage = {
+  id: string;
+  url: string;
+  mobileUrl?: string;
+  alt: string;
+};
+
+export type PromotionalMessage = {
+  id: string;
+  message: string;
+};
+
+export type SocialLink = {
+  id: string;
+  url: string;
+  type: SocialMediaType;
+  alt: string;
+};

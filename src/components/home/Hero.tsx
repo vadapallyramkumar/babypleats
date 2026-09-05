@@ -1,38 +1,125 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { assetPath } from "@/lib/paths";
+import { motion, AnimatePresence } from "framer-motion";
+import { useHeroImages } from "@/hooks/use-home";
 import { siteConfig } from "@/lib/site";
+import type { HeroImage } from "@/lib/api/types";
+
+function HeroSlide({ image, priority }: { image: HeroImage; priority?: boolean }) {
+  return (
+    <>
+      {image.mobileUrl ? (
+        <>
+          <Image
+            src={image.mobileUrl}
+            alt={image.alt}
+            width={1080}
+            height={1350}
+            priority={priority}
+            sizes="100vw"
+            className="h-auto w-full object-contain object-center md:hidden"
+          />
+          <Image
+            src={image.url}
+            alt={image.alt}
+            width={1920}
+            height={900}
+            priority={priority}
+            sizes="100vw"
+            className="hidden h-auto w-full object-contain object-center md:block"
+          />
+        </>
+      ) : (
+        <Image
+          src={image.url}
+          alt={image.alt}
+          width={1920}
+          height={900}
+          priority={priority}
+          sizes="100vw"
+          className="h-auto w-full object-contain object-center"
+        />
+      )}
+    </>
+  );
+}
 
 export default function Hero() {
+  const { data: images, loading } = useHeroImages();
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    if (images.length <= 1) return;
+    const id = setInterval(() => {
+      setIndex((i) => (i + 1) % images.length);
+    }, 5000);
+    return () => clearInterval(id);
+  }, [images.length]);
+
+  useEffect(() => {
+    setIndex(0);
+  }, [images]);
+
+  const current = images[index] ?? images[0];
+
   return (
     <section className="relative w-full overflow-hidden bg-[#F3E6D8]">
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6 }}
+        className="relative"
       >
         <Link
           href="/shop"
           className="group relative block w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#A02C68] focus-visible:ring-offset-2"
           aria-label={`${siteConfig.name} — Shop collection`}
         >
-          {/* Full banner visible on all screens — no tall crop that cuts the sides */}
-          <Image
-            src={assetPath("/hero1.png")}
-            alt="Baby Pleats — Traditional elegance for little ones. Handcrafted with love for every special moment."
-            width={1920}
-            height={900}
-            priority
-            sizes="100vw"
-            className="h-auto w-full object-contain object-center"
-          />
+          {loading && !current ? (
+            <div
+              className="aspect-[21/9] w-full animate-pulse bg-[#E8D5C4]"
+              aria-hidden
+            />
+          ) : current ? (
+            images.length > 1 ? (
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={current.id}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.45 }}
+                >
+                  <HeroSlide image={current} priority={index === 0} />
+                </motion.div>
+              </AnimatePresence>
+            ) : (
+              <HeroSlide image={current} priority />
+            )
+          ) : null}
         </Link>
+
+        {images.length > 1 ? (
+          <div className="pointer-events-none absolute inset-x-0 bottom-3 z-10 flex justify-center gap-2">
+            {images.map((img, i) => (
+              <button
+                key={img.id}
+                type="button"
+                aria-label={`Show banner ${i + 1}`}
+                aria-current={i === index}
+                onClick={() => setIndex(i)}
+                className={`pointer-events-auto size-2 rounded-full transition ${
+                  i === index ? "bg-[#A02C68]" : "bg-white/70 hover:bg-white"
+                }`}
+              />
+            ))}
+          </div>
+        ) : null}
       </motion.div>
 
-      {/* Mobile-friendly CTA under the banner (baked-in button can be hard to tap) */}
       <div className="flex justify-center bg-[#FFF8F5] px-4 py-5 md:hidden">
         <Link
           href="/shop"
