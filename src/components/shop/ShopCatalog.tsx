@@ -9,9 +9,30 @@ import SectionHeading from "@/components/common/SectionHeading";
 import CategoryCard, {
   CATEGORY_BADGE_BY_SLUG,
 } from "@/components/shop/CategoryCard";
+import { Skeleton } from "@/components/ui/skeleton";
 import { productMatchesCategory } from "@/lib/api/catalog";
 import { useCategories, useProducts } from "@/hooks/use-catalog";
 import { assetPath } from "@/lib/paths";
+
+function ShopCatalogSkeleton() {
+  return (
+    <>
+      <div className="mb-10 space-y-3">
+        <Skeleton className="h-8 w-48" />
+        <Skeleton className="h-4 w-80 max-w-full" />
+      </div>
+      <div className="grid grid-cols-2 gap-x-3 gap-y-5 sm:gap-x-4 sm:gap-y-6 md:grid-cols-3 md:gap-x-5 lg:grid-cols-4">
+        {Array.from({ length: 8 }).map((_, i) => (
+          <div key={i} className="flex flex-col gap-3">
+            <Skeleton className="aspect-[4/5] w-full rounded-xl" />
+            <Skeleton className="h-4 w-3/4" />
+            <Skeleton className="h-3 w-1/2" />
+          </div>
+        ))}
+      </div>
+    </>
+  );
+}
 
 export default function ShopCatalog() {
   const { data: categories, loading: categoriesLoading } = useCategories();
@@ -39,9 +60,6 @@ export default function ShopCatalog() {
     return list;
   }, [products, sort, activeCategory, categorySlug]);
 
-  const newArrivalsImage =
-    products.find((p) => p.newArrival)?.image ?? "/hero1.png";
-
   const title =
     sort === "new"
       ? "New Arrivals"
@@ -50,8 +68,14 @@ export default function ShopCatalog() {
         : "All Categories";
 
   if (loading) {
+    return <ShopCatalogSkeleton />;
+  }
+
+  if (isBrowseMode && categories.length === 0) {
     return (
-      <p className="py-20 text-center text-gray-600">Loading shop…</p>
+      <div className="py-20 text-center">
+        <p className="text-gray-600">No collections available right now.</p>
+      </div>
     );
   }
 
@@ -69,13 +93,6 @@ export default function ShopCatalog() {
       {isBrowseMode ? (
         <>
           <div className="grid grid-cols-2 gap-x-3 gap-y-5 sm:gap-x-4 sm:gap-y-6 md:grid-cols-3 md:gap-x-5 lg:grid-cols-4">
-            <CategoryCard
-              href="/shop?sort=new"
-              image={newArrivalsImage}
-              label="New Arrivals"
-              badge="New"
-            />
-
             {categories.map((category) => (
               <CategoryCard
                 key={category.slug}

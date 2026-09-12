@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { useHeroImages } from "@/hooks/use-home";
+import { Skeleton } from "@/components/ui/skeleton";
 import { siteConfig } from "@/lib/site";
 import type { HeroImage } from "@/lib/api/types";
 
@@ -63,6 +64,19 @@ export default function Hero() {
     setIndex(0);
   }, [images]);
 
+  if (loading) {
+    return (
+      <section className="relative w-full overflow-hidden bg-[#F3E6D8]">
+        <Skeleton className="h-[400px] w-full rounded-none bg-[#E8D5C4] md:h-[600px]" />
+        <div className="flex justify-center bg-[#FFF8F5] px-4 py-5 md:hidden">
+          <Skeleton className="h-12 w-full max-w-xs rounded-md bg-[#E8D5C4]" />
+        </div>
+      </section>
+    );
+  }
+
+  if (images.length === 0) return null;
+
   const current = images[index] ?? images[0];
 
   return (
@@ -78,28 +92,21 @@ export default function Hero() {
           className="group relative block w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#A02C68] focus-visible:ring-offset-2"
           aria-label={`${siteConfig.name} — Shop collection`}
         >
-          {loading && !current ? (
-            <div
-              className="aspect-[21/9] w-full animate-pulse bg-[#E8D5C4]"
-              aria-hidden
-            />
-          ) : current ? (
-            images.length > 1 ? (
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={current.id}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.45 }}
-                >
-                  <HeroSlide image={current} priority={index === 0} />
-                </motion.div>
-              </AnimatePresence>
-            ) : (
-              <HeroSlide image={current} priority />
-            )
-          ) : null}
+          {images.length > 1 ? (
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={current.id}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.45 }}
+              >
+                <HeroSlide image={current} priority={index === 0} />
+              </motion.div>
+            </AnimatePresence>
+          ) : (
+            <HeroSlide image={current} priority />
+          )}
         </Link>
 
         {images.length > 1 ? (

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import Container from "@/components/layout/Container";
 import SectionHeading from "@/components/common/SectionHeading";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useSocialLinks } from "@/hooks/use-home";
 import { siteConfig } from "@/lib/site";
 import type { SocialLink } from "@/lib/api/types";
@@ -65,6 +66,8 @@ function SocialMedia({ item }: { item: SocialLink }) {
 export default function InstagramFeed() {
   const { data: posts, loading } = useSocialLinks();
 
+  if (!loading && posts.length === 0) return null;
+
   return (
     <section className="bg-[#FFF8F5] py-16 md:py-20">
       <Container>
@@ -73,13 +76,12 @@ export default function InstagramFeed() {
           subtitle={`Everyday moments and new drops at ${siteConfig.instagram.handle}`}
         />
 
-        {loading && posts.length === 0 ? (
+        {loading ? (
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-6 md:gap-4">
             {Array.from({ length: 6 }).map((_, i) => (
-              <div
+              <Skeleton
                 key={i}
-                className="aspect-[9/16] animate-pulse bg-[#F5E6EC] sm:aspect-square"
-                aria-hidden
+                className="aspect-[9/16] rounded-none sm:aspect-square"
               />
             ))}
           </div>

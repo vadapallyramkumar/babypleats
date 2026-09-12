@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { usePromotionalMessages } from "@/hooks/use-home";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function AnnouncementBar() {
-  const { data: messages } = usePromotionalMessages();
+  const { data: messages, loading } = usePromotionalMessages();
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
@@ -18,6 +19,16 @@ export default function AnnouncementBar() {
   useEffect(() => {
     setIndex(0);
   }, [messages]);
+
+  if (loading) {
+    return (
+      <div className="bg-[#A02C68]">
+        <div className="mx-auto flex h-10 max-w-7xl items-center justify-center px-4">
+          <Skeleton className="h-3 w-64 rounded-full bg-white/25" />
+        </div>
+      </div>
+    );
+  }
 
   const text = messages[index]?.message;
   if (!text) return null;
