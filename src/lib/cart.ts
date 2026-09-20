@@ -24,6 +24,8 @@ export type CartTotals = {
   total: number;
   currency: "INR";
   remainingForFreeShipping: number;
+  discount?: number;
+  couponCode?: string;
 };
 
 export type PaymentMethod = "razorpay" | "cod";

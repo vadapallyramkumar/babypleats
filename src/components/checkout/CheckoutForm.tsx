@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, type FormEvent, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/components/cart/cart-context";
@@ -11,6 +11,7 @@ import {
   verifyRazorpayPayment,
   type CheckoutCustomer,
 } from "@/lib/api/orders";
+import { validateCoupon, type ValidatedCoupon } from "@/lib/api/coupons";
 import { LAST_ORDER_KEY, type LastOrder, type PaymentMethod } from "@/lib/cart";
 import {
   checkoutFieldClass,
@@ -63,13 +64,72 @@ export default function CheckoutForm() {
   const [errors, setErrors] = useState<Partial<Record<keyof CheckoutCustomer, string>>>({});
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
+  const [couponInput, setCouponInput] = useState("");
+  const [applied, setApplied] = useState<ValidatedCoupon | null>(null);
+  const [couponError, setCouponError] = useState<string | null>(null);
+  const [couponBusy, setCouponBusy] = useState(false);
 
   const empty = ready && items.length === 0;
+  const itemsKey = items.map((item) => `${item.variantId}:${item.qty}`).join("|");
+  const payableTotal = applied?.totals.total ?? totals.total;
+
+  useEffect(() => {
+    if (!applied) return;
+    const code = applied.code;
+    let cancelled = false;
+    void validateCoupon({ code, items }).then(
+      (next) => {
+        if (!cancelled) {
+          setApplied(next);
+          setCouponError(null);
+        }
+      },
+      () => {
+        if (!cancelled) {
+          setApplied(null);
+          setCouponError("Coupon no longer applies to this bag.");
+        }
+      },
+    );
+    return () => {
+      cancelled = true;
+    };
+    // Re-check when bag contents change, not on every applied object identity.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [itemsKey]);
 
   const payLabel = useMemo(() => {
-    if (paymentMethod === "cod") return `Place order · ${formatPrice(totals.total)}`;
-    return `Pay ${formatPrice(totals.total)}`;
-  }, [paymentMethod, totals.total]);
+    if (paymentMethod === "cod") return `Place order · ${formatPrice(payableTotal)}`;
+    return `Pay ${formatPrice(payableTotal)}`;
+  }, [paymentMethod, payableTotal]);
+
+  async function handleApplyCoupon() {
+    setCouponError(null);
+    const code = couponInput.trim();
+    if (!code) {
+      setCouponError("Enter a coupon code.");
+      return;
+    }
+    setCouponBusy(true);
+    try {
+      const next = await validateCoupon({
+        code,
+        items,
+        phone: customer.phone.trim() || undefined,
+      });
+      setApplied(next);
+      setCouponInput(next.code);
+    } catch (error) {
+      setApplied(null);
+      setCouponError(
+        error instanceof CheckoutError
+          ? error.message
+          : "This coupon is not valid.",
+      );
+    } finally {
+      setCouponBusy(false);
+    }
+  }
 
   function update<K extends keyof CheckoutCustomer>(key: K, value: CheckoutCustomer[K]) {
     setCustomer((current) => ({ ...current, [key]: value }));
@@ -105,16 +165,27 @@ export default function CheckoutForm() {
       const placed = await placeOrder({
         customer: payloadCustomer,
         items,
-        totals,
+        totals: {
+          ...totals,
+          discount: applied?.discount ?? 0,
+          total: payableTotal,
+          couponCode: applied?.code,
+        },
         paymentMethod,
         notes,
+        couponCode: applied?.code,
       });
 
       const receipt: LastOrder = {
         id: placed.id,
         paymentMethod,
         customerName: payloadCustomer.name,
-        totals,
+        totals: {
+          ...totals,
+          discount: applied?.discount ?? 0,
+          total: payableTotal,
+          couponCode: applied?.code,
+        },
         items: items.map((item) => ({
           productName: item.productName,
           size: item.size,
@@ -139,7 +210,7 @@ export default function CheckoutForm() {
 
       const amountPaise = razorpayAmountPaise(
         placed.razorpay.amount,
-        totals.total
+        payableTotal
       );
 
       await new Promise<void>((resolve, reject) => {
@@ -363,7 +434,7 @@ export default function CheckoutForm() {
                   Cash on delivery
                 </span>
                 <span className="mt-1 block text-sm text-gray-600">
-                  Pay {formatPrice(totals.total)} in cash when your order arrives.
+                  Pay {formatPrice(payableTotal)} in cash when your order arrives.
                 </span>
               </span>
             </label>
@@ -389,11 +460,63 @@ export default function CheckoutForm() {
         <div className="mt-2 max-h-[22rem] overflow-y-auto">
           <CartLineItems compact />
         </div>
-        <dl className="mt-4 space-y-1 border-t border-[#E8D0DA] pt-4 text-sm">
+        <div className="mt-4 border-t border-[#E8D0DA] pt-4">
+          <label className="block text-sm font-semibold text-gray-900">
+            Have a coupon?
+          </label>
+          <div className="mt-2 flex gap-2">
+            <input
+              className={checkoutFieldClass}
+              value={couponInput}
+              onChange={(e) => setCouponInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  void handleApplyCoupon();
+                }
+              }}
+              placeholder="FESTIVE10"
+              autoComplete="off"
+            />
+            <button
+              type="button"
+              disabled={couponBusy || submitting}
+              onClick={() => void handleApplyCoupon()}
+              className="shrink-0 border border-[#A02C68] px-4 text-sm font-semibold text-[#A02C68] transition hover:bg-[#FBF0F4] disabled:opacity-60"
+            >
+              {couponBusy ? "…" : "Apply"}
+            </button>
+          </div>
+          {applied ? (
+            <p className="mt-2 text-xs text-[#A02C68]">
+              {applied.code} applied · {formatPrice(applied.discount)} off
+              <button
+                type="button"
+                className="ml-2 underline"
+                onClick={() => {
+                  setApplied(null);
+                  setCouponError(null);
+                }}
+              >
+                Remove
+              </button>
+            </p>
+          ) : null}
+          {couponError ? (
+            <p className="mt-2 text-xs text-red-700">{couponError}</p>
+          ) : null}
+        </div>
+        <dl className="mt-4 space-y-1 text-sm">
           <div className="flex justify-between text-gray-600">
             <dt>Subtotal</dt>
             <dd>{formatPrice(totals.subtotal)}</dd>
           </div>
+          {applied ? (
+            <div className="flex justify-between text-gray-600">
+              <dt>Discount ({applied.code})</dt>
+              <dd>−{formatPrice(applied.discount)}</dd>
+            </div>
+          ) : null}
           <div className="flex justify-between text-gray-600">
             <dt>Shipping</dt>
             <dd>
@@ -402,7 +525,7 @@ export default function CheckoutForm() {
           </div>
           <div className="flex justify-between pt-2 text-base font-semibold text-gray-900">
             <dt>Total</dt>
-            <dd>{formatPrice(totals.total)}</dd>
+            <dd>{formatPrice(payableTotal)}</dd>
           </div>
         </dl>
 

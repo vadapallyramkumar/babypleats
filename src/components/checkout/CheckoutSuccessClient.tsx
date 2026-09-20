@@ -78,6 +78,15 @@ export default function CheckoutSuccessClient() {
                 <dt>Subtotal</dt>
                 <dd>{formatPrice(order.totals.subtotal)}</dd>
               </div>
+              {order.totals.discount ? (
+                <div className="flex justify-between text-gray-600">
+                  <dt>
+                    Discount
+                    {order.totals.couponCode ? ` (${order.totals.couponCode})` : ""}
+                  </dt>
+                  <dd>−{formatPrice(order.totals.discount)}</dd>
+                </div>
+              ) : null}
               <div className="flex justify-between text-gray-600">
                 <dt>Shipping</dt>
                 <dd>

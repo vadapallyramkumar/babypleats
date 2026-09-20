@@ -18,6 +18,7 @@ export type PlaceOrderInput = {
   totals: CartTotals;
   paymentMethod: PaymentMethod;
   notes?: string;
+  couponCode?: string;
 };
 
 export type RazorpayOrderPayload = {
@@ -123,6 +124,7 @@ function toOrderBody(input: PlaceOrderInput) {
       currency: "INR" as const,
     },
     notes: buildNotes(input),
+    couponCode: input.couponCode,
   };
 }
 
