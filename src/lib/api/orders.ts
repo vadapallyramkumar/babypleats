@@ -235,8 +235,8 @@ export async function verifyRazorpayPayment(input: {
   };
 
   const paths = [
-    `/orders/${encodeURIComponent(input.orderId)}/payments/verify`,
     "/checkout/verify",
+    `/orders/${encodeURIComponent(input.orderId)}/payments/verify`,
     "/payments/verify",
   ];
 
