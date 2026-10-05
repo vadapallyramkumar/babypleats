@@ -3,7 +3,7 @@
 import { Minus, Plus, Trash2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { assetPath } from "@/lib/paths";
+import { assetPath, productPath } from "@/lib/paths";
 import { formatPrice } from "@/lib/product-utils";
 import { useCart } from "@/components/cart/cart-context";
 import { cn } from "@/lib/utils";
@@ -59,7 +59,7 @@ export function CartLineItems({ compact, onNavigate }: CartLineItemsProps) {
       {items.map((item) => (
         <li key={item.variantId} className={cn("flex gap-3", compact ? "py-4" : "py-5")}>
           <Link
-            href={`/products/${item.slug}`}
+            href={productPath(item.slug)}
             onClick={onNavigate}
             className="relative size-20 shrink-0 overflow-hidden bg-[#F5E6EC] sm:size-24"
           >
@@ -76,7 +76,7 @@ export function CartLineItems({ compact, onNavigate }: CartLineItemsProps) {
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
                 <Link
-                  href={`/products/${item.slug}`}
+                  href={productPath(item.slug)}
                   onClick={onNavigate}
                   className="line-clamp-2 font-medium text-gray-900 hover:text-[#A02C68]"
                 >

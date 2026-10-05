@@ -19,6 +19,15 @@ const nextConfig = {
   env: {
     NEXT_PUBLIC_BASE_PATH: basePath,
   },
+
+  async rewrites() {
+    return [
+      {
+        source: "/v1/:path*",
+        destination: "https://babypleats-api.onrender.com/v1/:path*",
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;

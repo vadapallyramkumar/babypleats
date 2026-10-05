@@ -5,7 +5,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { ShoppingBag } from "lucide-react";
 import { formatPrice, getFromPrice, type Product } from "@/lib/product-utils";
-import { assetPath } from "@/lib/paths";
+import { assetPath, productPath } from "@/lib/paths";
 import { toCartItem } from "@/lib/cart";
 import { useCart } from "@/components/cart/cart-context";
 
@@ -38,7 +38,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       transition={{ duration: 0.4 }}
       className="group flex flex-col overflow-hidden rounded-xl border border-[#E8D5C4]/80 bg-[#FDF8F5] shadow-[0_4px_16px_-6px_rgba(90,40,50,0.18)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_14px_28px_-10px_rgba(90,40,50,0.28)]"
     >
-      <Link href={`/products/${product.slug}`} className="block">
+      <Link href={productPath(product.slug)} className="block">
         <div className="relative aspect-[4/5] overflow-hidden bg-[#F5E6EC]">
           <Image
             src={assetPath(product.image)}
@@ -86,7 +86,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           </button>
         ) : (
           <Link
-            href={`/products/${product.slug}`}
+            href={productPath(product.slug)}
             className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-[#7A1B30] bg-white px-3 py-2.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-[#7A1B30] transition hover:bg-[#7A1B30] hover:text-white md:text-[11px]"
           >
             <ShoppingBag className="size-4 shrink-0" />

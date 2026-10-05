@@ -17,3 +17,8 @@ export function assetPath(path: string): string {
 
   return `${base}${path}`;
 }
+
+/** Product URL that works for slugs added after the last GitHub Pages build. */
+export function productPath(slug: string): string {
+  return `/products?slug=${encodeURIComponent(slug)}`;
+}

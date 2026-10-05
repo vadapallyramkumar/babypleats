@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Cormorant_Garamond, Outfit } from "next/font/google";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
@@ -38,6 +39,18 @@ export default function RootLayout({
       className={`${display.variable} ${sans.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-[#FFF8F5] font-[family-name:var(--font-sans)] text-gray-800">
+        <Script id="legacy-product-path" strategy="beforeInteractive">
+          {`(function () {
+  var base = ${JSON.stringify(process.env.NEXT_PUBLIC_BASE_PATH ?? "")};
+  var path = location.pathname;
+  if (base && path.indexOf(base) === 0) path = path.slice(base.length) || "/";
+  var match = path.match(/^\\/products\\/([^/]+)\\/?$/);
+  if (!match) return;
+  var slug = decodeURIComponent(match[1]);
+  if (!slug || slug === "index.html") return;
+  location.replace(base + "/products/?slug=" + encodeURIComponent(slug) + location.hash);
+})();`}
+        </Script>
         <Providers>
           <Header />
           <div className="flex-1">{children}</div>
