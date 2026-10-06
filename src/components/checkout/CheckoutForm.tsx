@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from "react";
+import { useEffect, useState, type FormEvent, type ReactNode } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/components/cart/cart-context";
@@ -12,7 +12,7 @@ import {
   type CheckoutCustomer,
 } from "@/lib/api/orders";
 import { validateCoupon, type ValidatedCoupon } from "@/lib/api/coupons";
-import { LAST_ORDER_KEY, type LastOrder, type PaymentMethod } from "@/lib/cart";
+import { LAST_ORDER_KEY, type LastOrder } from "@/lib/cart";
 import {
   checkoutFieldClass,
   razorpayAmountPaise,
@@ -22,7 +22,6 @@ import {
 import { openRazorpayCheckout } from "@/lib/razorpay";
 import { formatPrice } from "@/lib/product-utils";
 import { siteConfig } from "@/lib/site";
-import { cn } from "@/lib/utils";
 
 const emptyCustomer: CheckoutCustomer = {
   name: "",
@@ -60,7 +59,6 @@ export default function CheckoutForm() {
   const { items, totals, clearCart, closeCart, ready } = useCart();
   const [customer, setCustomer] = useState<CheckoutCustomer>(emptyCustomer);
   const [notes, setNotes] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("razorpay");
   const [errors, setErrors] = useState<Partial<Record<keyof CheckoutCustomer, string>>>({});
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
@@ -98,10 +96,7 @@ export default function CheckoutForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [itemsKey]);
 
-  const payLabel = useMemo(() => {
-    if (paymentMethod === "cod") return `Place order · ${formatPrice(payableTotal)}`;
-    return `Pay ${formatPrice(payableTotal)}`;
-  }, [paymentMethod, payableTotal]);
+  const payLabel = `Pay ${formatPrice(payableTotal)}`;
 
   async function handleApplyCoupon() {
     setCouponError(null);
@@ -171,14 +166,14 @@ export default function CheckoutForm() {
           total: payableTotal,
           couponCode: applied?.code,
         },
-        paymentMethod,
+        paymentMethod: "razorpay",
         notes,
         couponCode: applied?.code,
       });
 
       const receipt: LastOrder = {
         id: placed.id,
-        paymentMethod,
+        paymentMethod: "razorpay",
         customerName: payloadCustomer.name,
         totals: {
           ...totals,
@@ -195,16 +190,9 @@ export default function CheckoutForm() {
         })),
       };
 
-      if (paymentMethod === "cod") {
-        persistReceipt(receipt);
-        clearCart();
-        router.push("/checkout/success");
-        return;
-      }
-
       if (!placed.razorpay?.orderId || !placed.razorpay.keyId) {
         throw new CheckoutError(
-          "Online payment is not available yet. Please choose cash on delivery, or try again in a moment."
+          "Online payment is not available yet. Please try again in a moment."
         );
       }
 
@@ -258,7 +246,7 @@ export default function CheckoutForm() {
           checkout.on("payment.failed", () => {
             reject(
               new CheckoutError(
-                "Payment failed. Please try another method or cash on delivery."
+                "Payment failed. Please try again."
               )
             );
           });
@@ -389,55 +377,11 @@ export default function CheckoutForm() {
           <h2 className="font-[family-name:var(--font-display)] text-2xl text-gray-900">
             Payment
           </h2>
-          <div className="mt-5 grid gap-3">
-            <label
-              className={cn(
-                "flex cursor-pointer items-start gap-3 border p-4 transition",
-                paymentMethod === "razorpay"
-                  ? "border-[#A02C68] bg-[#FBF0F4]"
-                  : "border-[#E8D0DA] bg-white"
-              )}
-            >
-              <input
-                type="radio"
-                name="payment"
-                className="mt-1"
-                checked={paymentMethod === "razorpay"}
-                onChange={() => setPaymentMethod("razorpay")}
-              />
-              <span>
-                <span className="block font-semibold text-gray-900">
-                  Pay online
-                </span>
-                <span className="mt-1 block text-sm text-gray-600">
-                  UPI, cards, netbanking, and wallets via Razorpay.
-                </span>
-              </span>
-            </label>
-            <label
-              className={cn(
-                "flex cursor-pointer items-start gap-3 border p-4 transition",
-                paymentMethod === "cod"
-                  ? "border-[#A02C68] bg-[#FBF0F4]"
-                  : "border-[#E8D0DA] bg-white"
-              )}
-            >
-              <input
-                type="radio"
-                name="payment"
-                className="mt-1"
-                checked={paymentMethod === "cod"}
-                onChange={() => setPaymentMethod("cod")}
-              />
-              <span>
-                <span className="block font-semibold text-gray-900">
-                  Cash on delivery
-                </span>
-                <span className="mt-1 block text-sm text-gray-600">
-                  Pay {formatPrice(payableTotal)} in cash when your order arrives.
-                </span>
-              </span>
-            </label>
+          <div className="mt-5 border border-[#A02C68] bg-[#FBF0F4] p-4">
+            <span className="block font-semibold text-gray-900">Pay online</span>
+            <span className="mt-1 block text-sm text-gray-600">
+              UPI, cards, netbanking, and wallets via Razorpay.
+            </span>
           </div>
         </section>
 

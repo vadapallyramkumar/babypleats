@@ -15,7 +15,7 @@ export default function CheckoutPage() {
           Checkout
         </h1>
         <p className="mt-3 max-w-2xl text-base text-gray-600">
-          Add your delivery details and pay online or on delivery.
+          Add your delivery details and pay online.
         </p>
         <div className="mt-10">
           <CheckoutForm />

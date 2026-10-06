@@ -2,7 +2,7 @@ export const faqs = [
   {
     question: "How do I place an order?",
     answer:
-      "Browse the shop, choose your size and colour, and tap Add to bag. Open your bag to change quantities or remove pieces, then checkout to pay online (UPI, cards, netbanking) or choose cash on delivery.",
+      "Browse the shop, choose your size and colour, and tap Add to bag. Open your bag to change quantities or remove pieces, then checkout to pay online (UPI, cards, netbanking).",
   },
   {
     question: "What is the usual delivery time?",
