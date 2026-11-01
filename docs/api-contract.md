@@ -656,9 +656,9 @@ A machine-readable copy of the seed lives at [`catalog.seed.json`](./catalog.see
 | **C — Storefront integration** | Replace `src/data/*` with API client; keep WhatsApp CTA | Yes |
 | **D — Orders automation** | Website `POST /orders`; optional WhatsApp webhooks | Optional |
 
-**Hosting note:** The live site is a static GitHub Pages export. Catalog is loaded at build/runtime from the external API (`NEXT_PUBLIC_API_BASE_URL`), with `src/data/catalog.fallback.json` when the API is unreachable.
+**Hosting note:** The live site is a static export hosted on Render Static Site. Catalog is loaded at runtime from the external API (`NEXT_PUBLIC_API_BASE_URL`), with `src/data/catalog.fallback.json` when the API is unreachable.
 
-**v1 non-goals:** payment gateway, customer accounts, Next.js Route Handlers on GitHub Pages.
+**v1 non-goals:** payment gateway, customer accounts, Next.js Route Handlers on static hosting.
 
 ---
 

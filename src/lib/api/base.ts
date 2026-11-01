@@ -1,11 +1,16 @@
+/**
+ * Resolve the public API origin from NEXT_PUBLIC_API_BASE_URL.
+ * Accepts either `https://host` or `https://host/v1` and normalizes to `.../v1`.
+ */
 export function getApiBase(): string {
-  if (typeof window !== "undefined" && window.location.hostname === "localhost") {
-    return "/v1";
+  const configured = process.env.NEXT_PUBLIC_API_BASE_URL?.trim();
+  if (!configured) {
+    throw new Error(
+      "NEXT_PUBLIC_API_BASE_URL is not set. Add it to .env.local (dev) or the host environment (production)."
+    );
   }
 
-  const raw = (
-    process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://babypleats-api.onrender.com"
-  ).replace(/\/$/, "");
+  const raw = configured.replace(/\/$/, "");
   return raw.endsWith("/v1") ? raw : `${raw}/v1`;
 }
 

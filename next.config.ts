@@ -1,10 +1,6 @@
-/** @type {import('next').NextConfig} */
+import type { NextConfig } from "next";
 
-const basePath =
-  process.env.NEXT_PUBLIC_BASE_PATH ??
-  (process.env.NODE_ENV === "production" ? "/babypleats" : "");
-
-const nextConfig = {
+const nextConfig: NextConfig = {
   output: "export",
 
   images: {
@@ -12,22 +8,6 @@ const nextConfig = {
   },
 
   trailingSlash: true,
-
-  basePath,
-  assetPrefix: basePath ? `${basePath}/` : undefined,
-
-  env: {
-    NEXT_PUBLIC_BASE_PATH: basePath,
-  },
-
-  async rewrites() {
-    return [
-      {
-        source: "/v1/:path*",
-        destination: "https://babypleats-api.onrender.com/v1/:path*",
-      },
-    ];
-  },
 };
 
-module.exports = nextConfig;
+export default nextConfig;
