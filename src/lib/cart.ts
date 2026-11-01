@@ -30,6 +30,12 @@ export type CartTotals = {
 
 export type PaymentMethod = "razorpay" | "cod";
 
+export type OrderEstimatedDelivery = {
+  from: string;
+  to: string;
+  region?: string;
+};
+
 export type LastOrder = {
   id: string;
   paymentMethod: PaymentMethod;
@@ -40,6 +46,8 @@ export type LastOrder = {
     CartItem,
     "productName" | "size" | "color" | "qty" | "unitPrice"
   >[];
+  /** Backend-calculated range; omit/null for older receipts. */
+  estimatedDelivery?: OrderEstimatedDelivery | null;
 };
 
 export function getCartTotals(items: CartItem[]): CartTotals {

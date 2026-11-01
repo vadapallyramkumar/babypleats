@@ -1,5 +1,10 @@
 import { API_BASE } from "@/lib/api/base";
-import type { CartItem, CartTotals, PaymentMethod } from "@/lib/cart";
+import type {
+  CartItem,
+  CartTotals,
+  OrderEstimatedDelivery,
+  PaymentMethod,
+} from "@/lib/cart";
 
 export type CheckoutCustomer = {
   name: string;
@@ -32,6 +37,8 @@ export type PlacedOrder = {
   id: string;
   status?: string;
   razorpay?: RazorpayOrderPayload;
+  /** Backend recalculates at order creation; informational on the client. */
+  estimatedDelivery?: OrderEstimatedDelivery | null;
 };
 
 export class CheckoutError extends Error {
@@ -181,6 +188,34 @@ function pickOrderId(source: unknown): string | undefined {
   return undefined;
 }
 
+function pickEstimatedDelivery(
+  source: unknown
+): OrderEstimatedDelivery | null | undefined {
+  const root = asRecord(source);
+  if (!root) return undefined;
+  if (!("estimatedDelivery" in root)) return undefined;
+  if (root.estimatedDelivery == null) return null;
+
+  const estimate = asRecord(root.estimatedDelivery);
+  if (!estimate) return null;
+
+  const from = typeof estimate.from === "string" ? estimate.from : "";
+  const to = typeof estimate.to === "string" ? estimate.to : "";
+  if (!from || !to) return null;
+
+  let region: string | undefined;
+  if (typeof estimate.region === "string") {
+    region = estimate.region;
+  } else {
+    const nested = asRecord(estimate.region);
+    if (nested && typeof nested.name === "string") {
+      region = nested.name;
+    }
+  }
+
+  return { from, to, region };
+}
+
 function parsePlacedOrder(payload: unknown): PlacedOrder {
   const root = asRecord(payload) ?? {};
   const data = asRecord(root.data) ?? root;
@@ -193,6 +228,8 @@ function parsePlacedOrder(payload: unknown): PlacedOrder {
     id,
     status: typeof data.status === "string" ? data.status : undefined,
     razorpay: pickRazorpay(data) ?? pickRazorpay(root) ?? pickRazorpay(payload),
+    estimatedDelivery:
+      pickEstimatedDelivery(data) ?? pickEstimatedDelivery(root) ?? null,
   };
 }
 

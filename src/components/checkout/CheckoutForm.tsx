@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/components/cart/cart-context";
 import { CartLineItems } from "@/components/cart/CartLineItems";
+import DeliveryEstimator from "@/components/delivery/DeliveryEstimator";
 import {
   CheckoutError,
   placeOrder,
@@ -15,6 +16,7 @@ import { validateCoupon, type ValidatedCoupon } from "@/lib/api/coupons";
 import { LAST_ORDER_KEY, type LastOrder } from "@/lib/cart";
 import {
   checkoutFieldClass,
+  digitsOnly,
   razorpayAmountPaise,
   toE164Phone,
   validateCheckout,
@@ -150,7 +152,7 @@ export default function CheckoutForm() {
       address2: customer.address2?.trim() || undefined,
       city: customer.city.trim(),
       state: customer.state.trim(),
-      pincode: customer.pincode.trim(),
+      pincode: digitsOnly(customer.pincode).slice(0, 6),
     };
 
     setSubmitting(true);
@@ -188,6 +190,7 @@ export default function CheckoutForm() {
           qty: item.qty,
           unitPrice: item.unitPrice,
         })),
+        estimatedDelivery: placed.estimatedDelivery ?? null,
       };
 
       if (!placed.razorpay?.orderId || !placed.razorpay.keyId) {
@@ -367,10 +370,19 @@ export default function CheckoutForm() {
                 value={customer.pincode}
                 inputMode="numeric"
                 autoComplete="postal-code"
-                onChange={(e) => update("pincode", e.target.value)}
+                maxLength={6}
+                onChange={(e) =>
+                  update("pincode", digitsOnly(e.target.value).slice(0, 6))
+                }
               />
             </Field>
           </div>
+          <DeliveryEstimator
+            className="mt-5"
+            compact
+            pincode={customer.pincode}
+            debounceMs={450}
+          />
         </section>
 
         <section>

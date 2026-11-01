@@ -4,6 +4,7 @@ import { useMemo, useSyncExternalStore } from "react";
 import Link from "next/link";
 import Container from "@/components/layout/Container";
 import { LAST_ORDER_KEY, type LastOrder } from "@/lib/cart";
+import { formatDeliveryRange } from "@/lib/date";
 import { formatPrice } from "@/lib/product-utils";
 
 function subscribe() {
@@ -52,6 +53,25 @@ export default function CheckoutSuccessClient() {
               <p className="mt-2 text-sm text-gray-500">
                 Payment ID: {order.paymentId}
               </p>
+            ) : null}
+
+            {order.estimatedDelivery?.from && order.estimatedDelivery?.to ? (
+              <div className="mt-6 border border-[#E8D0DA] bg-[#FBF0F4] px-4 py-3">
+                <p className="text-xs font-semibold tracking-wide text-[#A02C68] uppercase">
+                  Estimated Delivery
+                </p>
+                <p className="mt-1 text-base font-semibold text-gray-900">
+                  {formatDeliveryRange(
+                    order.estimatedDelivery.from,
+                    order.estimatedDelivery.to
+                  )}
+                </p>
+                {order.estimatedDelivery.region ? (
+                  <p className="mt-1 text-sm text-gray-600">
+                    Delivery to {order.estimatedDelivery.region}
+                  </p>
+                ) : null}
+              </div>
             ) : null}
 
             <ul className="mt-8 divide-y divide-[#E8D0DA] border border-[#E8D0DA] bg-white">

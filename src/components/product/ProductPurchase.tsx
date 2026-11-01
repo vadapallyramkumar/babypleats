@@ -13,6 +13,7 @@ import {
 import { toCartItem } from "@/lib/cart";
 import { useCart } from "@/components/cart/cart-context";
 import { QtyStepper } from "@/components/cart/CartLineItems";
+import DeliveryEstimator from "@/components/delivery/DeliveryEstimator";
 
 type ProductPurchaseProps = {
   product: Product;
@@ -139,6 +140,8 @@ export default function ProductPurchase({
           </div>
         </fieldset>
       ) : null}
+
+      <DeliveryEstimator />
 
       {inStock && variant ? (
         <div>
